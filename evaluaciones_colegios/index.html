@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pruebas Educativas · Acceso</title>
+    <!-- Font Awesome 6 (gratuito) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Google Fonts (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <style>
+        /* ---------- RESET ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #eef2f7; /* gris azulado muy claro */
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Fondo con formas orgánicas en azul/verde suave */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(52, 152, 219, 0.08) 0%, transparent 70%);
+            top: -250px;
+            right: -200px;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        body::after {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(46, 204, 113, 0.07) 0%, transparent 70%);
+            bottom: -150px;
+            left: -150px;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* ---------- CONTENEDOR PRINCIPAL ---------- */
+        .container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 720px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 48px;
+            padding: 55px 50px 45px;
+            box-shadow: 0 20px 60px rgba(44, 62, 80, 0.12),
+                        0 2px 10px rgba(255, 255, 255, 0.8) inset;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            transition: transform 0.3s ease;
+        }
+
+        /* ---------- HEADER ---------- */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 6px;
+        }
+        .header i {
+            font-size: 2.6rem;
+            color: #2c3e50; /* azul marino */
+            filter: drop-shadow(0 4px 12px rgba(44, 62, 80, 0.15));
+        }
+        .header h1 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #2c3e50;
+            text-shadow: 0 2px 8px rgba(255, 255, 255, 0.4);
+        }
+
+        .bienvenida {
+            color: #5d6d7e;
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin-top: -2px;
+            margin-bottom: 6px;
+            letter-spacing: 0.2px;
+        }
+        .bienvenida span {
+            color: #2980b9;
+            font-weight: 500;
+        }
+
+        .subtitle {
+            color: #7f8c9b;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            margin-bottom: 42px;
+            border-top: 1px solid rgba(44, 62, 80, 0.06);
+            padding-top: 18px;
+            display: inline-block;
+        }
+
+        /* ---------- BOTONES ---------- */
+        .buttons {
+            display: flex;
+            gap: 32px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 200px;
+            height: 200px;
+            border: none;
+            border-radius: 32px;
+            background: rgba(255, 255, 255, 0.5);
+            color: #2c3e50;
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px rgba(44, 62, 80, 0.08);
+        }
+
+        .btn i {
+            font-size: 4.4rem;
+            margin-bottom: 14px;
+            transition: transform 0.4s ease;
+        }
+
+        .btn-profesor i {
+            color: #2c3e50; /* azul marino */
+            filter: drop-shadow(0 4px 12px rgba(44, 62, 80, 0.15));
+        }
+        .btn-alumno i {
+            color: #27ae60; /* verde institucional */
+            filter: drop-shadow(0 4px 12px rgba(39, 174, 96, 0.15));
+        }
+
+        .btn .label {
+            position: relative;
+            z-index: 2;
+            letter-spacing: 0.5px;
+            color: #2c3e50;
+        }
+
+        .btn .badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 0.6rem;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 4px 14px;
+            border-radius: 30px;
+            color: #5d6d7e;
+            font-weight: 500;
+            letter-spacing: 0.6px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .btn .badge i {
+            font-size: 0.7rem;
+            margin-right: 4px;
+        }
+
+        /* Efectos hover */
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.5) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+        .btn:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 16px 48px rgba(44, 62, 80, 0.15);
+            border-color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.75);
+        }
+        .btn:hover::before {
+            opacity: 1;
+        }
+        .btn:hover i {
+            transform: scale(1.08) translateY(-4px);
+        }
+        .btn:active {
+            transform: scale(0.95);
+            transition-duration: 0.1s;
+        }
+
+        .btn-profesor {
+            background: linear-gradient(145deg, rgba(44, 62, 80, 0.04), rgba(255, 255, 255, 0.2));
+            border-color: rgba(44, 62, 80, 0.1);
+        }
+        .btn-profesor:hover {
+            background: linear-gradient(145deg, rgba(44, 62, 80, 0.08), rgba(255, 255, 255, 0.4));
+            border-color: rgba(44, 62, 80, 0.2);
+            box-shadow: 0 16px 48px rgba(44, 62, 80, 0.12);
+        }
+
+        .btn-alumno {
+            background: linear-gradient(145deg, rgba(39, 174, 96, 0.04), rgba(255, 255, 255, 0.2));
+            border-color: rgba(39, 174, 96, 0.1);
+        }
+        .btn-alumno:hover {
+            background: linear-gradient(145deg, rgba(39, 174, 96, 0.08), rgba(255, 255, 255, 0.4));
+            border-color: rgba(39, 174, 96, 0.2);
+            box-shadow: 0 16px 48px rgba(39, 174, 96, 0.12);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 36px;
+            color: #b0bec5;
+            font-size: 0.7rem;
+            letter-spacing: 1.5px;
+        }
+
+        /* ---------- MODAL (PANTALLA COMPLETA) ---------- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(44, 62, 80, 0.3);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+            animation: fadeIn 0.25s ease;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: #ffffff;
+            border-radius: 40px;
+            padding: 45px 40px 40px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 30px 80px rgba(44, 62, 80, 0.20);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-box .modal-icon {
+            text-align: center;
+            font-size: 2.8rem;
+            color: #2c3e50;
+            margin-bottom: 16px;
+        }
+        .modal-box h2 {
+            color: #2c3e50;
+            font-size: 1.6rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+        .modal-box p {
+            color: #7f8c9b;
+            text-align: center;
+            font-size: 0.9rem;
+            margin-bottom: 28px;
+        }
+
+        .modal-box .input-group {
+            margin-bottom: 18px;
+        }
+        .modal-box .input-group label {
+            display: block;
+            color: #5d6d7e;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 6px;
+        }
+        .modal-box .input-group input {
+            width: 100%;
+            padding: 14px 18px;
+            background: #f4f6f9;
+            border: 1px solid #d5dbe0;
+            border-radius: 16px;
+            color: #2c3e50;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .modal-box .input-group input:focus {
+            border-color: #2980b9;
+            box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.10);
+        }
+        .modal-box .input-group input::placeholder {
+            color: #b0bec5;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        .modal-actions button {
+            flex: 1;
+            padding: 14px 10px;
+            border: none;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .modal-actions .btn-cancel {
+            background: #f1f3f5;
+            color: #5d6d7e;
+            border: 1px solid #e2e6ea;
+        }
+        .modal-actions .btn-cancel:hover {
+            background: #e8ecf0;
+        }
+        .modal-actions .btn-submit {
+            background: #2c3e50;
+            color: #ffffff;
+            box-shadow: 0 8px 24px rgba(44, 62, 80, 0.15);
+        }
+        .modal-actions .btn-submit:hover {
+            background: #1a2a3a;
+            transform: scale(1.02);
+            box-shadow: 0 12px 32px rgba(44, 62, 80, 0.25);
+        }
+        .modal-actions .btn-submit:active {
+            transform: scale(0.97);
+        }
+
+        .modal-error {
+            color: #e74c3c;
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 16px;
+            background: rgba(231, 76, 60, 0.04);
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(231, 76, 60, 0.08);
+            display: none;
+        }
+        .modal-error.visible {
+            display: block;
+        }
+
+        .setup-link {
+            display: none;
+            margin-top: 10px;
+            color: #1d4ed8;
+            font-size: 0.86rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .setup-link.visible {
+            display: block;
+        }
+
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .container {
+                padding: 30px 20px 28px;
+                border-radius: 32px;
+            }
+            .header h1 {
+                font-size: 2rem;
+            }
+            .header i {
+                font-size: 2.2rem;
+            }
+            .buttons {
+                gap: 18px;
+            }
+            .btn {
+                width: 150px;
+                height: 150px;
+                font-size: 1.1rem;
+                border-radius: 24px;
+            }
+            .btn i {
+                font-size: 3.4rem;
+                margin-bottom: 10px;
+            }
+            .bienvenida {
+                font-size: 1rem;
+            }
+            .subtitle {
+                font-size: 0.7rem;
+                margin-bottom: 28px;
+            }
+            .btn .badge {
+                font-size: 0.5rem;
+                top: 12px;
+                right: 12px;
+                padding: 3px 10px;
+            }
+            .modal-box {
+                padding: 30px 20px 28px;
+            }
+        }
+        @media (max-width: 400px) {
+            .btn {
+                width: 130px;
+                height: 130px;
+                font-size: 1rem;
+            }
+            .btn i {
+                font-size: 2.8rem;
+            }
+            .container {
+                padding: 24px 14px 20px;
+            }
+            .header h1 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body data-brand-page="Acceso" data-brand-no-custom-logo>
+
+    <!-- Contenedor principal -->
+    <div class="container">
+        <div class="header">
+            <i class="fas fa-graduation-cap" data-brand-logo-fallback></i>
+            <img data-brand-logo hidden alt="Logo del establecimiento" style="width:68px;height:68px;object-fit:contain;border-radius:12px;margin-right:12px">
+            <h1 data-brand="name">Pruebas Educativas</h1>
+        </div>
+
+        <p class="bienvenida">
+            <i class="fas fa-hand-peace" style="margin-right: 10px; color: #2980b9;"></i>
+            <span data-brand="welcome">Hola, bienvenido al sistema</span>
+        </p>
+
+        <div class="subtitle" data-brand="profile-prompt">Selecciona tu perfil</div>
+
+        <div class="buttons">
+            <!-- Botón Profesores -->
+            <button class="btn btn-profesor" id="btnProfesor">
+                <span class="badge"><i class="fas fa-lock"></i> restringido</span>
+                <i class="fas fa-chalkboard-user"></i>
+                <span class="label">Profesores</span>
+            </button>
+
+            <!-- Botón Alumnos -->
+            <button class="btn btn-alumno" id="btnAlumno">
+                <span class="badge"><i class="fas fa-globe"></i> abierto</span>
+                <i class="fas fa-user-graduate"></i>
+                <span class="label">Alumnos</span>
+            </button>
+        </div>
+
+        <div class="footer">· sistema seguro ·</div>
+    </div>
+
+    <!-- MODAL DE AUTENTICACIÓN (centrado en pantalla) -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-box">
+            <div class="modal-icon"><i class="fas fa-shield-alt"></i></div>
+            <h2>Acceso Profesores</h2>
+            <p>Introduce tus credenciales</p>
+
+            <div class="input-group">
+                <label for="modalSchool"><i class="fas fa-school"></i> Código del colegio</label>
+                <input type="text" id="modalSchool" placeholder="Déjalo vacío sólo para superadministrador" autocomplete="organization" />
+            </div>
+
+            <div class="input-group">
+                <label for="modalUser"><i class="fas fa-user"></i> Usuario</label>
+                <input type="text" id="modalUser" placeholder="ej. profesores" autocomplete="off" />
+            </div>
+            <div class="input-group">
+                <label for="modalPass"><i class="fas fa-key"></i> Contraseña</label>
+                <input type="password" id="modalPass" placeholder="••••••••" autocomplete="off" />
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel" id="modalCancel">Cancelar</button>
+                <button class="btn-submit" id="modalSubmit">Ingresar</button>
+            </div>
+
+            <div class="modal-error" id="modalError">No se pudo iniciar sesión.</div>
+            <a class="setup-link" id="setupLink" href="instalar.php">Configurar administrador por primera vez</a>
+        </div>
+    </div>
+
+    <script>
+        // URLs
+        const URL_PROFESORES = "pruebas_educativas.php";
+        const URL_ALUMNOS   = "portal_estudiante.php";
+        const URL_HORARIO   = "horario.html";
+
+        // Elementos
+        const btnProfesor = document.getElementById('btnProfesor');
+        const btnAlumno   = document.getElementById('btnAlumno');
+        const modal       = document.getElementById('authModal');
+        const modalUser   = document.getElementById('modalUser');
+        const modalSchool = document.getElementById('modalSchool');
+        const modalPass   = document.getElementById('modalPass');
+        const modalSubmit = document.getElementById('modalSubmit');
+        const modalCancel = document.getElementById('modalCancel');
+        const modalError  = document.getElementById('modalError');
+        const setupLink   = document.getElementById('setupLink');
+
+        // --- Mostrar modal (centrado) ---
+        function showModal() {
+            modal.classList.add('active');
+            modalUser.value = '';
+            modalSchool.value = new URLSearchParams(location.search).get('colegio') || '';
+            modalPass.value = '';
+            modalError.classList.remove('visible');
+            setupLink.classList.remove('visible');
+            modalUser.focus();
+        }
+
+        function hideModal() {
+            modal.classList.remove('active');
+        }
+
+        function showAuthError(message, needsSetup) {
+            modalError.textContent = message;
+            modalError.classList.add('visible');
+            setupLink.classList.toggle('visible', Boolean(needsSetup));
+        }
+
+        // --- Validar credenciales en el servidor ---
+        async function validateCredentials() {
+            const user = modalUser.value.trim();
+            const pass = modalPass.value;
+            if (!user || !pass) {
+                showAuthError('Escribe el usuario y la contraseña.', false);
+                return false;
+            }
+
+            modalSubmit.disabled = true;
+            modalSubmit.textContent = 'Ingresando…';
+            modalError.classList.remove('visible');
+            setupLink.classList.remove('visible');
+            try {
+                const response = await fetch('autenticacion.php', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'login', colegio: modalSchool.value.trim(), usuario: user, password: pass })
+                });
+                const result = await response.json();
+                if (!response.ok || !result.ok) {
+                    throw Object.assign(new Error(result.error || 'No se pudo iniciar sesión.'), { needsSetup: result.needsSetup });
+                }
+                window.location.href = result.redirect || URL_PROFESORES;
+                return true;
+            } catch (error) {
+                showAuthError(error.message || 'El servidor de autenticación no está disponible.', error.needsSetup);
+                modalPass.value = '';
+                modalPass.focus();
+                return false;
+            } finally {
+                modalSubmit.disabled = false;
+                modalSubmit.textContent = 'Ingresar';
+            }
+        }
+
+        // --- Eventos del modal ---
+        modalSubmit.addEventListener('click', validateCredentials);
+        modalCancel.addEventListener('click', hideModal);
+
+        // Cerrar al hacer clic fuera del modal (en el overlay)
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) hideModal();
+        });
+
+        // Enter en los campos
+        modalUser.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') modalPass.focus();
+        });
+        modalPass.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') validateCredentials();
+        });
+
+        // --- Botón Profesores: abre el modal ---
+        btnProfesor.addEventListener('click', function() {
+            showModal();
+        });
+
+        // --- Botón Alumnos: redirige directamente ---
+        btnAlumno.addEventListener('click', function() {
+            const schoolCode = new URLSearchParams(location.search).get('colegio');
+            window.location.href = schoolCode ? URL_ALUMNOS + '?colegio=' + encodeURIComponent(schoolCode) : URL_ALUMNOS;
+        });
+
+        console.log('✅ Portal educativo cargado con autenticación de servidor.');
+    </script>
+    <script src="marca.js"></script>
+</body>
+</html>
