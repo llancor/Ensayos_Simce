@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Repaso </title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <style>
+    :root {
+      --navy:#2c3e50; --navy-dark:#1a252f; --accent:#60a5fa;
+      --bg:#f8fafc; --surface:#ffffff; --surface2:#f1f5f9;
+      --border:#e2e8f0; --text:#334155; --text-muted:#64748b;
+      --success:#10b981; --danger:#ef4444; --gold:#f59e0b;
+    }
+    body.dark-mode {
+      --bg:#0f172a; --surface:#1e293b; --surface2:#334155;
+      --text:#f8fafc; --text-muted:#94a3b8; --border:#334155;
+      --navy:#60a5fa; --navy-dark:#3b82f6;
+    }
+    .theme-toggle {
+      position: fixed; top: 1rem; right: 1rem;
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text); font-size: 1.25rem;
+      width: 45px; height: 45px; border-radius: 50%;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+      z-index: 1000; transition: all 0.2s ease;
+    }
+    .theme-toggle:hover { transform: scale(1.1); }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding-left: 280px; user-select:none; -webkit-user-select:none; }
+    #anti-cheat-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000; color:#fff; z-index:99999; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:2rem; }
+    .cheat-warning { font-size:4rem; margin-bottom:1rem; }
+    .cheat-desc { font-size:1.5rem; color:#ef4444; font-weight:800; max-width:600px; line-height:1.4; }
+    .cheat-count { font-size:1.2rem; color:#fca5a5; margin-top:1rem; font-weight:600; }
+    header {
+      background:#ffffff;
+      padding:1rem 2rem; border-bottom:1px solid var(--border);
+      box-shadow:0 2px 10px rgba(0,0,0,0.02); position:fixed; top:0; right: 0; left: 280px; z-index:50;
+    }
+    .header-inner { max-width:1150px; margin:0 auto; display:flex; align-items:center; gap:1rem; }
+    .logo-img { width:48px; height:auto; max-height:48px; flex-shrink:0; object-fit:contain; }
+    .htext h1 { font-size:1.1rem; font-weight:800; line-height:1.1; color:var(--navy); }
+    .htext p  { font-size:0.75rem; color:var(--text-muted); margin-top:2px; }
+    .timer-box { margin-left:auto; background:rgba(96,165,250,0.08); border:1px solid rgba(96,165,250,0.15); border-radius:10px; padding:0.4rem 0.8rem; text-align:center; }
+    .timer-label { font-size:0.6rem; color:var(--accent); font-weight:600; text-transform:uppercase; letter-spacing:.05em; }
+    .timer-val   { font-size:1.1rem; font-weight:800; color:var(--accent); font-feature-settings:'tnum'; }
+    main { max-width:1100px; margin: 100px auto 3rem; padding:0 1.5rem; }
+    /* Student Name */
+    .student-box {
+      background:var(--surface); border:2px solid var(--accent); border-radius:16px;
+      padding:1.25rem 1.5rem; margin-bottom:1.5rem; display:flex; align-items:center; gap:1rem;
+    }
+    .student-box label { font-size:0.85rem; font-weight:700; color:#3b82f6; white-space:nowrap; }
+    .student-box input {
+      flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:10px;
+      padding:0.6rem 1rem; font-size:1rem; color:var(--text); font-family:'Inter',sans-serif; outline:none;
+      transition:border-color 0.2s;
+    }
+    .student-box input:focus { border-color:var(--accent); }
+    /* Meta */
+    .meta { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:1.25rem 1.5rem; margin-bottom:1.5rem; display:flex; flex-wrap:wrap; gap:1rem; }
+    .meta-item { flex:1; min-width:140px; }
+    .meta-item .lbl { font-size:0.7rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em; }
+    .meta-item .val { font-size:0.95rem; font-weight:700; color:var(--text); margin-top:2px; }
+    .instrucciones { background:rgba(59,130,246,0.06); border:1px solid rgba(59,130,246,0.2); border-radius:12px; padding:1rem 1.25rem; margin-bottom:2rem; font-size:0.85rem; color:#475569; line-height:1.6; }
+    .instrucciones strong { color:#1a4a7a; }
+    /* Questions */
+    .question-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:1.5rem; margin-bottom:1.25rem; transition:border-color .2s; }
+    .question-card.answered { border-color:rgba(59,130,246,0.5); }
+    .question-card.correct  { border-color:var(--success)!important; background:rgba(16,185,129,0.05)!important; }
+    .question-card.wrong    { border-color:var(--danger)!important;  background:rgba(239,68,68,0.05)!important; }
+    .q-header { display:flex; align-items:center; gap:.75rem; margin-bottom:.75rem; }
+    .q-num    { font-size:.75rem; font-weight:700; color:#1a4a7a; text-transform:uppercase; letter-spacing:.05em; }
+    .q-skill  { background:rgba(217,119,6,0.1); border:1px solid rgba(217,119,6,0.25); border-radius:6px; padding:.15rem .6rem; font-size:.7rem; color:#d97706; font-weight:600; }
+    .q-text   { font-size:1.3rem; font-weight:500; line-height:1.6; margin-bottom:1rem; color:var(--text); }
+    .q-img    { max-width:100%; max-height:320px; width:auto; border-radius:10px; border:1px solid var(--border); display:block; object-fit:contain; background:#f8fafc; cursor:pointer; }
+    .img-wrapper { position:relative; display:inline-block; margin-bottom:1rem; }
+    .img-zoom-icon { position:absolute; top:10px; right:10px; background:var(--accent); color:white; width:44px; height:44px; border-radius:50%; border:2px solid white; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.3); opacity:0.95; transition:all 0.2s; font-size:1.4rem; z-index:10; }
+    .img-zoom-icon:hover { opacity:1; transform:scale(1.15); box-shadow:0 6px 16px rgba(0,0,0,0.4); background:#2563eb; }
+    /* Modal Zoom */
+    .img-modal { display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; overflow:hidden; background-color:rgba(0,0,0,0.85); backdrop-filter:blur(5px); flex-direction:column; align-items:center; justify-content:center; }
+    .img-modal-content { display:block; width:90vw; max-height:90vh; object-fit:contain; border-radius:8px; box-shadow:0 10px 40px rgba(0,0,0,0.5); transform-origin:center center; transition:transform 0.1s ease-out; cursor:grab; margin:auto; }
+    .img-modal-content:active { cursor:grabbing; }
+    .img-close { position:absolute; top:20px; right:30px; color:#f1f1f1; font-size:40px; font-weight:bold; cursor:pointer; z-index:10000; text-shadow:0 2px 4px rgba(0,0,0,0.5); }
+    .img-close:hover { color:#bbb; }
+    .img-zoom-controls { position:fixed; bottom:30px; left:50%; transform:translateX(-50%); display:flex; gap:10px; background:rgba(25,25,25,0.9); padding:10px 20px; border-radius:30px; box-shadow:0 5px 20px rgba(0,0,0,0.4); z-index:10000; align-items:center; }
+    .zoom-btn { background:#444; border:none; color:white; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:1.2rem; font-weight:bold; display:flex; align-items:center; justify-content:center; transition:background 0.2s; }
+    .zoom-btn:hover { background:#666; }
+    .zoom-val { color:white; font-size:.9rem; font-weight:600; min-width:50px; text-align:center; user-select:none; }
+    .q-alts   { display:flex; flex-direction:column; gap:.6rem; }
+    .alt-label { display:flex; align-items:flex-start; gap:.75rem; cursor:pointer; padding:.7rem .9rem; border-radius:10px; border:1.5px solid var(--border); background:var(--surface2); transition:all .2s; }
+    .alt-label:hover { border-color:var(--accent); background:rgba(59,130,246,0.08); }
+    .alt-label input[type=radio] { display:none; }
+    .alt-label.selected    { border-color:var(--accent); background:rgba(59,130,246,0.12); }
+    .alt-label.correct-ans { border-color:var(--success)!important; background:rgba(16,185,129,0.15)!important; }
+    .alt-label.wrong-ans   { border-color:var(--danger)!important;  background:rgba(239,68,68,0.15)!important; }
+    .alt-circle { width:34px;height:34px;border-radius:50%;background:rgba(59,130,246,0.12);display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;color:var(--accent);flex-shrink:0; }
+    .alt-label.selected .alt-circle    { background:var(--accent);  color:#fff; }
+    .alt-label.correct-ans .alt-circle { background:var(--success); color:#fff; }
+    .alt-label.wrong-ans .alt-circle   { background:var(--danger);  color:#fff; }
+    .alt-text { font-size:1.2rem; line-height:1.5; padding-top:2px; }
+    /* Results */
+    #results-panel { display:none; background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:2.5rem; margin-top:2rem; }
+    .results-top { display:flex; gap:2rem; align-items:center; flex-wrap:wrap; margin-bottom:2rem; }
+    .score-circle { width:120px;height:120px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:4px solid var(--success);background:rgba(16,185,129,0.1);flex-shrink:0; }
+    .score-circle.fail { border-color:var(--danger); background:rgba(239,68,68,0.1); }
+    .score-num { font-size:1.8rem;font-weight:800;color:var(--success);line-height:1; }
+    .score-circle.fail .score-num { color:var(--danger); }
+    .score-lbl { font-size:.65rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;margin-top:2px; }
+    .results-info { flex:1; }
+    .results-info h2 { font-size:1.2rem;font-weight:800;margin-bottom:.5rem;color:var(--text); }
+    .results-info p  { font-size:.9rem;color:var(--text-muted);margin-bottom:.3rem;line-height:1.5; }
+    .nota-badge { display:inline-block;font-size:2rem;font-weight:900;padding:.3rem 1rem;border-radius:12px;margin:.5rem 0; }
+    .nota-verde  { background:rgba(16,185,129,0.15);color:var(--success);border:2px solid var(--success); }
+    .nota-amarilla{ background:rgba(245,158,11,0.15);color:var(--gold);border:2px solid var(--gold); }
+    .nota-roja   { background:rgba(239,68,68,0.15);color:var(--danger);border:2px solid var(--danger); }
+    
+    .btn-informe {
+      margin-top:1rem; background:linear-gradient(135deg,#60a5fa,#3b82f6);
+      color:#fff;border:none;padding:.75rem 1.5rem;border-radius:12px;
+      font-size:.9rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;
+      box-shadow:0 4px 20px rgba(96,165,250,0.3);transition:all .25s;display:inline-flex;align-items:center;gap:.5rem;
+    }
+    .btn-informe:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(96,165,250,0.4); }
+    .btn-retry {
+      margin-top:1rem; background:linear-gradient(135deg,#10b981,#059669);
+      color:#fff;border:none;padding:.75rem 1.5rem;border-radius:12px;
+      font-size:.9rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;
+      box-shadow:0 4px 20px rgba(16,185,129,0.3);transition:all .25s;display:inline-flex;align-items:center;gap:.5rem;
+      margin-left: 0.5rem;
+    }
+    .btn-retry:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(44,62,80,0.3); }
+    /* Submit bar (Sidebar) */
+    .submit-bar { position:fixed;top:0;left:0;bottom:0;width:280px;background:#ffffff;border-right:1px solid var(--border);padding:2rem 1.5rem;display:flex;flex-direction:column;z-index:200;box-shadow:2px 0 15px rgba(0,0,0,0.03);overflow-y:auto;gap:1.5rem; }
+    .sidebar-logo { text-align:center; margin-bottom: 0.5rem; }
+    .sidebar-logo img { width: 80px; height: auto; margin-bottom: 0.8rem; }
+    .sidebar-logo h2 { font-size: 0.95rem; color: var(--navy); font-weight: 800; line-height: 1.2; }
+    .progress-wrap { display:flex;flex-direction:column;gap:1rem;flex:1; }
+    .progress-top  { display:flex;flex-direction:column;gap:.5rem; }
+    .answered-badge { font-size:1.1rem;font-weight:800;color:var(--navy); }
+    .answered-badge .total { color:var(--text-muted);font-weight:600; font-size:0.85rem; }
+    .progress-bar  { width:100%;height:10px;background:#e2e8f0;border-radius:5px;overflow:hidden; }
+    .progress-fill { height:100%;background:linear-gradient(90deg,var(--accent),#93c5fd);border-radius:5px;transition:width .4s ease; }
+    .pending-info  { font-size:.8rem;color:var(--danger);font-weight:600;display:flex;flex-direction:column;gap:.5rem; }
+    .pending-chips { display:flex;flex-wrap:wrap;gap:.4rem; }
+    .p-chip { background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#dc2626;border-radius:6px;padding:.2rem .5rem;font-size:.75rem;font-weight:700;cursor:pointer;transition:all .15s; }
+    .p-chip:hover { background:rgba(239,68,68,0.2);transform:scale(1.05); }
+    .all-ok-msg { font-size:.85rem;color:var(--success);font-weight:700; text-align:center; padding: 1rem 0; }
+    .btn-submit { background:linear-gradient(135deg,var(--accent),#3b82f6);color:#fff;border:none;padding:1rem;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(96,165,250,0.3);transition:all .25s;width:100%;margin-top:auto; }
+    .btn-submit:hover    { transform:translateY(-2px); box-shadow:0 6px 20px rgba(96,165,250,0.4); }
+    .btn-submit:disabled { opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;background:var(--text-muted); }
+    
+    @media(max-width:850px) {
+      body { padding-left: 0; padding-bottom: 120px; }
+      header { left: 0; width: 100%; }
+      .submit-bar { position:fixed;top:auto;bottom:0;left:0;width:100%;height:auto;flex-direction:row;align-items:center;padding:1rem;border-right:none;border-top:1px solid var(--border); box-shadow:0 -4px 15px rgba(0,0,0,0.05); }
+      .sidebar-logo { display: none; }
+      .btn-submit { width: auto; margin-top: 0; padding: 0.8rem 1.5rem; }
+      .results-top { flex-direction:column; }
+    }
+  </style>
+</head>
+<body>
+<button id="theme-toggle" class="theme-toggle" title="Cambiar tema">🌙</button>
+<div id="anti-cheat-overlay">
+  <div class="cheat-warning">⚠️</div>
+  <div class="cheat-desc">¡Atención! Has salido de la pestaña de la prueba o intentado cambiar de ventana. Esto se considera una falta a la integridad de la evaluación.</div>
+  <div class="cheat-count">Advertencias registradas: <span id="cheat-count-val">0</span></div>
+  <div style="margin-top:2rem;font-size:1rem;color:#94a3b8;">Vuelve a la prueba para continuar.</div>
+</div>
+<header>
+  <div class="header-inner">
+    <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'><path d='M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72l5 2.73 5-2.73v3.72z'/></svg>" class="logo-img" alt="Logo"/>
+    <div class="htext">
+      <h1>Repaso </h1>
+      <p>Pruebas educativas</p>
+    </div>
+    <div class="timer-box">
+      <div class="timer-label">Tiempo</div>
+      <div class="timer-val" id="timer">--:--</div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- NOMBRE ALUMNO -->
+  <div class="student-box">
+    <label>👤 Nombre del alumno:</label>
+    <input type="text" id="student-name" placeholder="Escribe tu nombre completo aquí..." />
+  </div>
+
+  <div class="meta">
+    <div class="meta-item"><div class="lbl">Asignatura</div><div class="val">Matemáticas</div></div>
+    <div class="meta-item"><div class="lbl">Curso</div><div class="val">4º A</div></div>
+    <div class="meta-item"><div class="lbl">Docente</div><div class="val">Marlen Valdebenito</div></div>
+    <div class="meta-item"><div class="lbl">Preguntas</div><div class="val">15</div></div>
+    <div class="meta-item"><div class="lbl">Puntaje máx.</div><div class="val">20 pts</div></div>
+    <div class="meta-item"><div class="lbl">Tiempo</div><div class="val">30 min</div></div>
+  </div>
+
+  <div class="instrucciones">
+    <strong>📌 Instrucciones:</strong>&nbsp;Lee atentamente cada pregunta y marca la alternativa correcta.
+  </div>
+
+  <div id="questions-container"></div>
+
+  <div id="results-panel">
+    <div class="results-top">
+      <div class="score-circle" id="score-circle">
+        <div class="score-num" id="score-num">0</div>
+        <div class="score-lbl">Correctas</div>
+      </div>
+      <div class="results-info">
+        <h2 id="results-msg"></h2>
+        <p id="results-sub"></p>
+        <div class="nota-badge" id="nota-badge"></div>
+        <br/>
+        <button class="btn-informe" id="btn-informe">📋 Retroalimentación Alumno</button>
+        <button class="btn-retry" id="btn-reintentar">🔄 Realizar nuevamente</button>
+
+        <div id="email-section" style="margin-top: 1.5rem; display: none;">
+          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0.5rem; font-weight:600;">📧 Enviar resultados al correo del profesor:</p>
+          <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
+            <input type="email" id="teacher-email" placeholder="correo@profesor.com" style="flex:1; min-width:200px; padding:0.8rem; border-radius:8px; border:1.5px solid var(--border); outline:none; font-size:0.95rem; background:var(--surface); color:var(--text);">
+            <button id="btn-send-email" class="btn-informe" style="margin:0; padding:0.8rem 1.4rem; white-space:nowrap;">✉️ Enviar al Profesor</button>
+          </div>
+          <p id="email-status" style="font-size:0.82rem; margin-top:0.5rem; color:var(--accent); font-weight:600;"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="submit-bar">
+  <div class="sidebar-logo">
+    <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231a4a7a'><path d='M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72l5 2.73 5-2.73v3.72z'/></svg>" alt="Logo"/>
+    <h2>Pruebas educativas</h2>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <span class="answered-badge"><span id="answered-num">0</span><span class="total"> / 15 respondidas</span></span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="pending-info" id="pending-info">
+      <span id="pending-label">⚠️ Debes responder todas las preguntas para habilitar el botón <span style="color:var(--accent);font-weight:800;">Revisar Prueba</span>. Faltan: </span>
+      <div class="pending-chips" id="pending-chips"></div>
+    </div>
+  </div>
+  <button class="btn-submit" id="btn-submit" disabled>🔍 Revisar Prueba</button>
+</div>
+
+<!-- Modal Zoom -->
+<div id="img-modal" class="img-modal">
+  <span class="img-close" onclick="closeZoom()">&times;</span>
+  <img class="img-modal-content" id="img-modal-content">
+  <div class="img-zoom-controls">
+    <button class="zoom-btn" onclick="zoomOut()" title="Alejar">-</button>
+    <div class="zoom-val" id="zoom-val">100%</div>
+    <button class="zoom-btn" onclick="zoomIn()" title="Acercar">+</button>
+  </div>
+</div>
+
+<script>
+  function safeImageSrc(src) {
+    const value = String(src || '');
+    return /^(data:image\/(?:png|jpeg|jpg|gif|webp);base64,|https?:\/\/)/i.test(value) ? value : '';
+  }
+
+  // Anti-Cheat: Prevent copy/paste/context menu
+  document.addEventListener('contextmenu', e => e.preventDefault());
+  document.addEventListener('copy', e => e.preventDefault());
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && (e.key.toLowerCase() === 'c' || e.key.toLowerCase() === 'v' || e.key.toLowerCase() === 'x' || e.key.toLowerCase() === 'p')) {
+      e.preventDefault();
+    }
+  });
+
+  // Anti-Cheat: Tab switching / Blur
+  let cheatCount = 0;
+  const overlay = document.getElementById('anti-cheat-overlay');
+  
+  function triggerCheat() {
+    if (typeof submitted !== 'undefined' && submitted) return;
+    cheatCount++;
+    document.getElementById('cheat-count-val').textContent = cheatCount;
+    overlay.style.display = 'flex';
+  }
+
+  document.addEventListener('visibilitychange', () => { if (document.hidden) triggerCheat(); });
+  window.addEventListener('blur', () => { triggerCheat(); });
+  window.addEventListener('focus', () => { overlay.style.display = 'none'; });
+
+  const QS       = [{"p":"Si tienes una colección de 56 estampillas y tu amigo te regala 32 más, ¿cuántas estampillas tienes en total?","a":"88","b":"24","c":"78","d":"98","r":"A","h":"","img":""},{"p":"María horneó 75 galletas y vendió 43. ¿Cuántas galletas le quedan a María?","a":"42","b":"118","c":"32","d":"30","r":"C","h":"","img":""},{"p":"Si tienes 3 cajas, y en cada caja hay 6 lápices, ¿cuántos lápices tienes en total?","a":"9","b":"18","c":"12","d":"24","r":"B","h":"","img":""},{"p":"¿Cuántos vértices tiene un cubo?","a":"6","b":"12","c":"4","d":"8","r":"D","h":"","img":"data:image/png;base64,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"},{"p":"¿Cuál es la suma total de 356 libros de cuentos y 289 libros de aventuras que hay en la biblioteca de la escuela?","a":"545","b":"645","c":"655","d":"755","r":"B","h":"","img":""},{"p":"En un juego, se debe formar el número 'cuatro mil setecientos tres'. ¿Cuál es la representación numérica correcta?","a":"4730","b":"4073","c":"4703","d":"70703","r":"C","h":"","img":""},{"p":"¿Qué número corresponde a la escritura 'Ocho mil doscientos cuarenta y uno'?","a":"8041","b":"8241","c":"8214","d":"82041","r":"B","h":"","img":""},{"p":"¿Qué número se forma con 8 unidades de mil, 3 centenas, 0 decenas y 5 unidades?","a":"8305","b":"8350","c":"8035","d":"83005","r":"A","h":"","img":""},{"p":"Una biblioteca escolar tenía 2850 libros. Si compraron 1950  libros nuevos y luego donaron 600  libros a otra escuela, ¿cuántos libros tiene la biblioteca ahora?","a":"4020","b":"4200","c":"4000","d":"5200","r":"B","h":"","img":""},{"p":"Un almacén vendió 3.000 kilos de papas en la mañana y 700 kilos de papas en la tarde. ¿Cuántos kilos de papas vendió en total","a":"2700","b":"3700","c":"4700","d":"4700","r":"B","h":"","img":""},{"p":"Javiera tiene 320 láminas en su colección. Su amigo Pedro le regaló 225  láminas y luego ella perdió 50 láminas. ¿Cuántas láminas tiene Javiera ahora?","a":"295","b":"395","c":"495","d":"595","r":"C","h":"","img":""},{"p":"Una fábrica produjo 800  juguetes en enero, 1250 en febrero y 2650 en marzo. Cuantos juguetes produjo enlos 3 meses","a":"2500","b":"3750","c":"4750","d":"5700","r":"D","h":"","img":""},{"p":"En una granja había 245 gallinas. El dueño compró 378 más. ¿Cuántas gallinas tiene ahora?","a":"613","b":"623","c":"633","d":"653","r":"B","h":"","img":""},{"p":"Una caja contiene 36 manzanas que se reparten en 6 bolsas iguales. ¿Cuántas manzanas hay en cada bolsa?","a":"4","b":"5","c":"6","d":"8","r":"C","h":"","img":""},{"p":"Un agricultor cosechó 15 sacos de papas, cada uno con 12 kilos. ¿Cuántos kilos cosechó en total?","a":"175","b":"180","c":"185","d":"195","r":"B","h":"","img":""}];
+  const TOTAL    = 15;
+  const SHOW_ANS = true;
+  const SHUFFLE_ALTS = false;
+  const TIEMPO   = 30;
+  const PMAX     = 20;
+  const EXIG     = 0.6;
+  const TITULO   = "Repaso ";
+  const ASIG     = "Matemáticas";
+  const CURSO    = "4º A";
+  const DOCENTE  = "Marlen Valdebenito";
+  let answered   = {};
+  let submitted  = false;
+  let timerSecs  = TIEMPO * 60;
+  let feedbackWindow;
+
+  // Dark Mode Logic
+  const themeToggle = document.getElementById('theme-toggle');
+  let isDark = false;
+  try { isDark = sessionStorage.getItem('theme-dark-' + TITULO.replace(/[^a-zA-Z0-9]/g, '')) === 'true'; } catch(e) {}
+  if (isDark) { document.body.classList.add('dark-mode'); themeToggle.textContent = '☀️'; }
+  themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    const darkNow = document.body.classList.contains('dark-mode');
+    themeToggle.textContent = darkNow ? '☀️' : '🌙';
+    try { sessionStorage.setItem('theme-dark-' + TITULO.replace(/[^a-zA-Z0-9]/g, ''), darkNow); } catch(e){}
+  });
+
+  // Resume progress (sessionStorage)
+  const stateKey = 'testState-' + TITULO.replace(/[^a-zA-Z0-9]/g, '');
+  let savedState = null;
+  try { savedState = JSON.parse(sessionStorage.getItem(stateKey)); } catch(e){}
+  if (savedState && !savedState.submitted && savedState.QS && savedState.QS.length === TOTAL) {
+    for (let i = 0; i < TOTAL; i++) { QS[i] = savedState.QS[i]; }
+    timerSecs = savedState.timerSecs;
+    answered = savedState.answered || {};
+    setTimeout(() => { document.getElementById('student-name').value = savedState.studentName || ''; }, 50);
+  } else {
+    // Shuffle questions (Fisher-Yates) for random order each attempt
+    for(let i=QS.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[QS[i],QS[j]]=[QS[j],QS[i]];}
+  }
+  const ANSWERS  = QS.map(q => q.r);
+
+  // Zoom Logic
+  let currentZoom = 1;
+  let isDragging = false;
+  let startX, startY, translateX = 0, translateY = 0;
+  const modal = document.getElementById('img-modal');
+  const modalImg = document.getElementById('img-modal-content');
+  const zoomText = document.getElementById('zoom-val');
+
+  function updateZoomTransform() {
+    modalImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentZoom})`;
+    zoomText.textContent = Math.round(currentZoom * 100) + '%';
+  }
+  function openZoom(src) {
+    modal.style.display = 'flex';
+    modalImg.src = src;
+    currentZoom = 1; translateX = 0; translateY = 0;
+    updateZoomTransform();
+  }
+  function closeZoom() { modal.style.display = 'none'; }
+  function zoomIn() { currentZoom = Math.min(currentZoom + 0.25, 4); updateZoomTransform(); }
+  function zoomOut() { currentZoom = Math.max(currentZoom - 0.25, 0.5); updateZoomTransform(); }
+  
+  modalImg.addEventListener('wheel', function(e) {
+    e.preventDefault();
+    if (e.deltaY < 0) zoomIn(); else zoomOut();
+  });
+  modalImg.addEventListener('mousedown', function(e) {
+    e.preventDefault();
+    isDragging = true;
+    startX = e.clientX - translateX;
+    startY = e.clientY - translateY;
+  });
+  window.addEventListener('mousemove', function(e) {
+    if (!isDragging) return;
+    translateX = e.clientX - startX;
+    translateY = e.clientY - startY;
+    updateZoomTransform();
+  });
+  window.addEventListener('mouseup', function() { isDragging = false; });
+  
+  // Cerrar al dar click afuera
+  modal.addEventListener('click', function(e) {
+    if (e.target === modal) closeZoom();
+  });
+
+  // Build questions
+  const container = document.getElementById('questions-container');
+  let currentAltsOrder = [];
+  QS.forEach((q, i) => {
+    let alts = [
+      { key: 'A', text: q.a },
+      { key: 'B', text: q.b },
+      { key: 'C', text: q.c },
+      { key: 'D', text: q.d }
+    ].filter(x => x.text);
+
+    if (SHUFFLE_ALTS) {
+      if (savedState && savedState.altsOrder && savedState.altsOrder[i]) {
+        alts = savedState.altsOrder[i];
+      } else {
+        for (let k = alts.length - 1; k > 0; k--) {
+          const j = Math.floor(Math.random() * (k + 1));
+          [alts[k], alts[j]] = [alts[j], alts[k]];
+        }
+      }
+    }
+    currentAltsOrder.push(alts);
+
+    const labels = ['A', 'B', 'C', 'D'];
+    const altsHTML = alts.map((alt, idx) => {
+      const displayLabel = labels[idx];
+      return `<label class="alt-label" id="q${i}-${alt.key}"><input type="radio" name="q${i}" value="${alt.key}"/><span class="alt-circle">${displayLabel}</span><span class="alt-text">${escHtml(alt.text)}</span></label>`;
+    }).join('');
+    const skillHtml = q.h ? `<span class="q-skill">${escHtml(q.h)}</span>` : '';
+    const safeImg = safeImageSrc(q.img);
+    const imgHtml = safeImg ? `
+      <div class="img-wrapper">
+        <img id="qimg-${i}" src="${escHtml(safeImg)}" class="q-img" alt="Imagen pregunta ${i+1}" onclick="openZoom(this.src)">
+        <div class="img-zoom-icon" onclick="openZoom(document.getElementById('qimg-${i}').src)" title="Ampliar imagen">🔍</div>
+      </div>` : '';
+    container.innerHTML += `
+    <div class="question-card" id="qcard-${i}">
+      <div class="q-header"><span class="q-num">Pregunta ${i+1}</span>${skillHtml}</div>
+      <p class="q-text">${escHtml(q.p)}</p>
+      ${imgHtml}
+      <div class="q-alts">${altsHTML}</div>
+    </div>`;
+  });
+
+  // Save progress to sessionStorage so the student can resume after a reload
+  function saveState() {
+    if (submitted) {
+      try { sessionStorage.removeItem(stateKey); } catch(e) {}
+      return;
+    }
+    const state = {
+      QS: QS, altsOrder: currentAltsOrder, answered: answered,
+      timerSecs: timerSecs, studentName: document.getElementById('student-name').value,
+      submitted: submitted
+    };
+    try { sessionStorage.setItem(stateKey, JSON.stringify(state)); } catch(e){}
+  }
+  document.getElementById('student-name').addEventListener('input', saveState);
+
+  // Bind alt clicks
+  document.querySelectorAll('.alt-label').forEach(label => {
+    label.addEventListener('click', function() {
+      if(submitted) return;
+      const input = this.querySelector('input');
+      const name  = input.name;
+      const val   = input.value;
+      const qIdx  = parseInt(name.replace('q',''));
+      document.querySelectorAll(`[name=${name}]`).forEach(r => r.closest('.alt-label').classList.remove('selected'));
+      this.classList.add('selected');
+      answered[qIdx] = val;
+      document.getElementById('qcard-'+qIdx).classList.add('answered');
+      updateProgress();
+      saveState();
+    });
+  });
+
+  // Restore visual state if loaded from sessionStorage
+  if (savedState && Object.keys(answered).length > 0) {
+    Object.keys(answered).forEach(qIdx => {
+      const val = answered[qIdx];
+      const label = document.getElementById('q'+qIdx+'-'+val);
+      if (label) {
+        label.classList.add('selected');
+        label.querySelector('input').checked = true;
+        document.getElementById('qcard-'+qIdx).classList.add('answered');
+      }
+    });
+    updateProgress();
+  }
+
+  // Timer
+  const timerEl = document.getElementById('timer');
+  function fmtTime(s) { return Math.floor(s/60).toString().padStart(2,'0')+':' + (s%60).toString().padStart(2,'0'); }
+  timerEl.textContent = fmtTime(timerSecs);
+  let interval;
+  function startTimer() {
+    timerEl.textContent = fmtTime(timerSecs);
+    timerEl.style.color = '#fca5a5';
+    interval = setInterval(() => {
+      timerSecs--;
+      timerEl.textContent = fmtTime(timerSecs);
+      if(timerSecs<=300) timerEl.style.color='#fbbf24';
+      if(timerSecs % 5 === 0) saveState();
+      if(timerSecs<=0){ clearInterval(interval); submitTest(true); }
+    },1000);
+  }
+  startTimer();
+
+  function updateProgress() {
+    const n = Object.keys(answered).length;
+    document.getElementById('answered-num').textContent = n;
+    document.getElementById('progress-fill').style.width = (n/TOTAL*100)+'%';
+    const btn = document.getElementById('btn-submit');
+    const pendingInfo = document.getElementById('pending-info');
+    const chipsEl = document.getElementById('pending-chips');
+    const pendingLabel = document.getElementById('pending-label');
+    if (n >= TOTAL) {
+      btn.disabled = false;
+      if(pendingLabel) pendingLabel.style.display = 'none';
+      if(chipsEl) chipsEl.innerHTML = '';
+      var okMsg = document.getElementById('all-ok-msg');
+      if(!okMsg) {
+        okMsg = document.createElement('span');
+        okMsg.id = 'all-ok-msg';
+        okMsg.className = 'all-ok-msg';
+        pendingInfo.appendChild(okMsg);
+      }
+      okMsg.style.display = '';
+      okMsg.textContent = '✅ ¡Todas las preguntas respondidas! Ya puedes revisar tu prueba.';
+    } else {
+      btn.disabled = true;
+      var okMsg2 = document.getElementById('all-ok-msg');
+      if(okMsg2) okMsg2.style.display = 'none';
+      if(pendingLabel) pendingLabel.style.display = '';
+      if(pendingLabel) pendingLabel.textContent = '⚠️ Debes responder todas las preguntas para habilitar el botón. Faltan: ';
+      if(chipsEl) {
+        var chipsHtml = [];
+        var cards = document.getElementById('questions-container').children;
+        for (var k = 0; k < cards.length; k++) {
+          if (!cards[k].classList.contains('answered')) {
+            var visualNum = k + 1;
+            var cardId = cards[k].id;
+            chipsHtml.push('<span class="p-chip" onclick="document.getElementById(\''+cardId+'\').scrollIntoView({behavior:\'smooth\',block:\'center\'})" title="Ir a pregunta '+visualNum+'">'+visualNum+'</span>');
+          }
+        }
+        chipsEl.innerHTML = chipsHtml.join('');
+      }
+    }
+  }
+
+  // Grade calculation: min 2.0, cut=4.0 at exigency, max 7.0
+  function calcNota(correctas) {
+    const puntajeAlumno = Math.round((correctas / TOTAL) * PMAX);
+    const corte = PMAX * EXIG;
+    let nota;
+    if(puntajeAlumno >= corte) {
+      nota = 4 + 3 * ((puntajeAlumno - corte) / (PMAX - corte));
+    } else {
+      nota = 2 + 2 * (puntajeAlumno / corte);
+    }
+    return { nota: Math.min(7, Math.max(2, nota)), puntaje: puntajeAlumno };
+  }
+
+  document.getElementById('btn-submit').addEventListener('click', () => submitTest(false));
+
+  let resultData = {};
+  function submitTest() {
+    if(submitted) return;
+    const nombre = document.getElementById('student-name').value.trim();
+    if(!nombre) {
+      const input = document.getElementById('student-name');
+      input.style.borderColor = '#ef4444';
+      input.placeholder = '⚠️ Debes escribir tu nombre antes de continuar';
+      let msg = document.getElementById('name-error');
+      if(!msg) {
+        msg = document.createElement('span');
+        msg.id = 'name-error';
+        msg.style.cssText = 'color:#ef4444;font-size:.8rem;font-weight:600;display:block;margin-top:.4rem;';
+        input.parentNode.appendChild(msg);
+      }
+      msg.textContent = '⚠️ Debes escribir tu nombre completo para revisar la prueba.';
+      input.focus();
+      input.addEventListener('input', function once() {
+        if(this.value.trim()) {
+          this.style.borderColor = '';
+          this.placeholder = 'Escribe tu nombre completo aquí...';
+          if(document.getElementById('name-error')) document.getElementById('name-error').remove();
+          this.removeEventListener('input', once);
+        }
+      });
+      return;
+    }
+    submitted = true;
+    clearInterval(interval);
+    saveState(); // Will clear sessionStorage because submitted=true
+    document.getElementById('btn-submit').disabled = true;
+    document.getElementById('btn-submit').textContent = '✅ Revisado';
+
+    let correct = 0;
+    const detalles = [];
+    ANSWERS.forEach((ans, i) => {
+      const userAns   = answered[i] || '';
+      const card      = document.getElementById('qcard-'+i);
+      const corrLabel = document.getElementById('q'+i+'-'+ans);
+      const userLabel = answered[i] ? document.getElementById('q'+i+'-'+userAns) : null;
+      const isOk      = userAns === ans;
+      if(isOk) {
+        correct++;
+        card.classList.add('correct');
+        if(corrLabel) corrLabel.classList.add('correct-ans');
+      } else {
+        card.classList.add('wrong');
+        if(userLabel) userLabel.classList.add('wrong-ans');
+        if(SHOW_ANS && corrLabel) corrLabel.classList.add('correct-ans');
+      }
+      const altTexts = { A: QS[i].a, B: QS[i].b, C: QS[i].c, D: QS[i].d };
+      const textCorrecta = altTexts[ans] || '';
+      const textAlumno   = userAns ? (altTexts[userAns] || '') : '';
+      detalles.push({ num:i+1, pregunta:QS[i].p, correcta:ans, textCorrecta, alumno:userAns, textAlumno, ok:isOk, habilidad:QS[i].h });
+    });
+
+    const {nota, puntaje} = calcNota(correct);
+    const notaStr = nota.toFixed(1);
+    const pct = Math.round(correct/TOTAL*100);
+    const pass = nota >= 4.0;
+
+    const circle = document.getElementById('score-circle');
+    if(!pass) circle.classList.add('fail');
+    else circle.classList.remove('fail');
+    document.getElementById('score-num').textContent = correct + '/' + TOTAL;
+    
+    let msg = nota >= 6 ? '🎉 ¡Excelente resultado!' : nota >= 5 ? '👍 ¡Muy buen trabajo!' : nota >= 4 ? '💪 ¡Aprobado!' : '📖 Sigue practicando';
+    document.getElementById('results-msg').textContent = msg;
+    document.getElementById('results-sub').textContent = 'Obtuviste ' + correct + ' de ' + TOTAL + ' correctas • ' + puntaje + ' de ' + PMAX + ' puntos (' + pct + '%)';
+    
+    const badge = document.getElementById('nota-badge');
+    badge.textContent = 'Nota: ' + notaStr;
+    badge.className = 'nota-badge ' + (nota >= 5.0 ? 'nota-verde' : nota >= 4.0 ? 'nota-amarilla' : 'nota-roja');
+
+    resultData = { nombre, nota: notaStr, notaNum: nota, puntaje, puntajeMax: PMAX, correct, total: TOTAL, pct, pass, detalles, curso: CURSO, docente: DOCENTE, asig: ASIG, titulo: TITULO };
+
+    document.getElementById('results-panel').style.display = 'block';
+    document.getElementById('email-section').style.display = 'block';
+    setTimeout(() => {
+      document.getElementById('results-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }
+
+  document.getElementById('btn-send-email').addEventListener('click', () => {
+    const email = document.getElementById('teacher-email').value.trim();
+    const status = document.getElementById('email-status');
+    status.style.color = 'var(--warning)';
+    status.textContent = '🔒 El envío a servicios externos fue deshabilitado por privacidad. Usa la descarga local de resultados.';
+    return;
+    if (!email || !email.includes('@')) {
+      status.style.color = 'var(--danger)';
+      status.textContent = '⚠️ Debes ingresar un correo válido.';
+      document.getElementById('teacher-email').focus();
+      return;
+    }
+
+    const d = resultData;
+    const detalle = d.detalles.map((det, i) =>
+      (i+1) + '. ' + det.pregunta.substring(0, 60) + (det.pregunta.length > 60 ? '...' : '') +
+      ' | Alumno: ' + (det.textAlumno || 'Sin respuesta') +
+      ' | Correcta: ' + det.textCorrecta +
+      ' | ' + (det.ok ? '✅ Correcta' : '❌ Incorrecta')
+    ).join('\n');
+
+    // Crear el formulario dinámicamente fuera de main para evitar conflictos con radio buttons
+    let form = document.getElementById('formsubmit-form');
+    if (!form) {
+      form = document.createElement('form');
+      form.id = 'formsubmit-form';
+      form.method = 'POST';
+      form.target = '_blank';
+      form.style.display = 'none';
+      document.body.appendChild(form);
+    }
+    form.innerHTML = '';
+    form.action = '#';
+    const fields = {
+      '_subject': '📋 Resultados Prueba: ' + TITULO + ' – Alumno: ' + d.nombre,
+      '_template': 'table',
+      '_captcha': 'false',
+      'Alumno': d.nombre,
+      'Prueba': TITULO,
+      'Asignatura': ASIG,
+      'Curso': CURSO || '—',
+      'Nota': d.nota,
+      'Puntaje': d.puntaje + ' / ' + d.puntajeMax + ' pts',
+      'Preguntas_Correctas': d.correct + ' de ' + d.total,
+      'Porcentaje': d.pct + '%',
+      'Detalle_Respuestas': detalle
+    };
+    Object.entries(fields).forEach(([name, value]) => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      input.value = value;
+      form.appendChild(input);
+    });
+    // Envío externo deshabilitado por privacidad.
+
+    status.style.color = 'var(--success)';
+    status.textContent = '✅ ¡Enviado! (Solo la 1ra vez debes activar tu correo en el enlace que te llega de FormSubmit)';
+    document.getElementById('btn-send-email').disabled = true;
+  });
+
+  document.getElementById('btn-informe').addEventListener('click', () => {
+    const d = resultData;
+    const notaColor = d.notaNum>=5?'#10b981':d.notaNum>=4?'#f59e0b':'#ef4444';
+    const rows = d.detalles.map((det,i) => `
+      <tr style="background:${det.ok?'rgba(16,185,129,0.07)':'rgba(239,68,68,0.07)'};">
+        <td style="text-align:center;color:#94a3b8;font-weight:700;">${det.num}</td>
+        <td style="max-width:350px;">${escHtml(det.pregunta)}</td>
+        <td style="text-align:center;">${escHtml(det.habilidad||'—')}</td>
+        <td style="text-align:center;font-weight:800;color:${det.ok?'#10b981':'#ef4444'};">${escHtml(det.textAlumno||'—')}</td>
+        <td style="text-align:center;font-weight:700;color:#10b981;">${escHtml(det.textCorrecta)}</td>
+        <td style="text-align:center;font-size:1.1rem;">${det.ok?'\u2705':'\u274c'}</td>
+      </tr>`).join('');
+
+    const corr  = d.detalles.filter(x=>x.ok).length;
+    const incorr = d.detalles.filter(x=>!x.ok).length;
+    const informe = `<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"/><title>Retroalimentación Alumno</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Inter',sans-serif;background:#f0f4f8;color:#1e293b;padding:2rem;}
+  .page{max-width:900px;margin:0 auto;}
+  h1{font-size:1.6rem;font-weight:900;color:#1a4a7a;margin-bottom:.25rem;}
+  .sub{font-size:.85rem;color:#64748b;margin-bottom:2rem;}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:2rem;}
+  .kpi{background:#fff;border-radius:14px;padding:1.25rem;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,0.08);}
+  .kpi .lbl{font-size:.72rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem;}
+  .kpi .val{font-size:1.6rem;font-weight:900;line-height:1;}
+  .nota-val{color:${notaColor};}
+  .section-title{font-size:.9rem;font-weight:700;color:#1a4a7a;text-transform:uppercase;letter-spacing:.07em;margin:2rem 0 1rem;border-left:4px solid #1a4a7a;padding-left:.75rem;}
+  table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.06);}
+  thead th{background:#1a4a7a;color:#e8f0fe;font-size:.78rem;font-weight:700;padding:.75rem 1rem;text-align:left;text-transform:uppercase;letter-spacing:.04em;}
+  tbody td{padding:.65rem 1rem;font-size:.85rem;border-bottom:1px solid #f1f5f9;}
+  .stat-bar{height:10px;background:#e2e8f0;border-radius:5px;overflow:hidden;margin-top:.3rem;}
+  .stat-fill-c{height:100%;background:#10b981;border-radius:5px;}
+  .stat-fill-i{height:100%;background:#ef4444;border-radius:5px;}
+  .btn-retry-report {
+    background: linear-gradient(135deg,#10b981,#059669); color: #fff; border: none; padding: 0.8rem 1.5rem; border-radius: 10px;
+    font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+    display: inline-flex; align-items:center; gap: 0.5rem;
+    box-shadow: 0 4px 12px rgba(16,185,129,0.2);
+  }
+  .btn-retry-report:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(16,185,129,0.3); }
+  @media print{body{background:#fff;padding:0;} .no-print{display:none;}}
+</style></head><body>
+<div class="page">
+  <div style="display:flex; align-items:center; gap:1.5rem; margin-bottom:1.5rem;">
+    <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231a4a7a'><path d='M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72l5 2.73 5-2.73v3.72z'/></svg>" style="width:80px;height:auto;" alt="Logo">
+    <div style="flex:1;">
+      <h1>Nombre Alumno: ${escHtml(d.nombre)}</h1>
+      <div class="sub">${escHtml(d.titulo)} &bull; ${escHtml(d.asig)} &bull; Docente: ${escHtml(d.docente||'—')}</div>
+    </div>
+    <div class="no-print">
+      <button class="btn-retry-report" onclick="if(window.opener){window.opener.document.getElementById('btn-reintentar').click(); window.close();}else{alert('La ventana principal fue cerrada.');}">🔄 Realizar nuevamente</button>
+    </div>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><div class="lbl">Curso</div><div class="val" style="font-size:1rem;color:#475569;">${escHtml(d.curso||'—')}</div></div>
+    <div class="kpi"><div class="lbl">Nota</div><div class="val nota-val">${d.nota}</div></div>
+    <div class="kpi"><div class="lbl">Puntaje</div><div class="val" style="color:#3b82f6;">${d.puntaje}/${d.puntajeMax}</div></div>
+    <div class="kpi"><div class="lbl">Correctas</div><div class="val" style="color:#10b981;">${corr}</div></div>
+    <div class="kpi"><div class="lbl">Incorrectas</div><div class="val" style="color:#ef4444;">${incorr}</div></div>
+  </div>
+  <div class="section-title">Estadística de Preguntas</div>
+  <div style="display:flex;gap:1.5rem;margin-bottom:1.5rem;flex-wrap:wrap;">
+    <div style="flex:1;min-width:200px;background:#fff;border-radius:14px;padding:1.25rem;box-shadow:0 2px 10px rgba(0,0,0,0.06);">
+      <div style="font-size:.75rem;font-weight:700;color:#10b981;text-transform:uppercase;margin-bottom:.5rem;">Correctas (${corr})</div>
+      <div class="stat-bar"><div class="stat-fill-c" style="width:${Math.round(corr/d.total*100)}%"></div></div>
+      <div style="font-size:1.4rem;font-weight:900;color:#10b981;margin-top:.5rem;">${Math.round(corr/d.total*100)}%</div>
+    </div>
+    <div style="flex:1;min-width:200px;background:#fff;border-radius:14px;padding:1.25rem;box-shadow:0 2px 10px rgba(0,0,0,0.06);">
+      <div style="font-size:.75rem;font-weight:700;color:#ef4444;text-transform:uppercase;margin-bottom:.5rem;">Incorrectas (${incorr})</div>
+      <div class="stat-bar"><div class="stat-fill-i" style="width:${Math.round(incorr/d.total*100)}%"></div></div>
+      <div style="font-size:1.4rem;font-weight:900;color:#ef4444;margin-top:.5rem;">${Math.round(incorr/d.total*100)}%</div>
+    </div>
+  </div>
+  <div class="section-title">Detalle por Pregunta</div>
+  <table>
+    <thead><tr><th style="text-align:center">#</th><th>Pregunta</th><th style="text-align:center">Habilidad</th><th>Respuesta del Alumno</th><th>Respuesta Correcta</th><th style="text-align:center">Estado</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table>
+  <p style="margin-top:30px; font-size:.75rem; color:#94a3b8; text-align:center; border-top:1px solid #f1f5f9; padding-top:20px;" class="no-print">
+    Este reporte fue generado automáticamente para fines pedagógicos.
+  </p>
+</div></body></html>`;
+
+    const w = window.open('','_blank');
+    w.document.write(informe);
+    w.document.close();
+    feedbackWindow = w;
+  });
+
+  document.getElementById('btn-reintentar').addEventListener('click', () => {
+      if (typeof feedbackWindow !== 'undefined' && feedbackWindow && !feedbackWindow.closed) {
+        feedbackWindow.close();
+      }
+
+      try { sessionStorage.removeItem(stateKey); } catch(e) {}
+      answered = {};
+      submitted = false;
+      timerSecs = TIEMPO * 60;
+      
+      document.getElementById('results-panel').style.display = 'none';
+      const btnSubmit = document.getElementById('btn-submit');
+      btnSubmit.textContent = '🔍 Revisar Prueba';
+      btnSubmit.disabled = true;
+      
+      document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+      document.querySelectorAll('.alt-label').forEach(l => {
+        l.classList.remove('selected', 'correct-ans', 'wrong-ans');
+      });
+      document.querySelectorAll('.question-card').forEach(c => {
+        c.classList.remove('answered', 'correct', 'wrong');
+      });
+
+      const cards = Array.from(container.children);
+      for (let i = cards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cards[i], cards[j]] = [cards[j], cards[i]];
+      }
+      cards.forEach((card, index) => {
+        container.appendChild(card);
+        card.querySelector('.q-num').textContent = 'Pregunta ' + (index + 1);
+      });
+
+      updateProgress();
+      if(interval) clearInterval(interval);
+      startTimer();
+      window.scrollTo({top: 0, behavior: 'smooth'});
+  });
+
+</script>
+<script>document.addEventListener("DOMContentLoaded",function(){if(typeof renderMathInElement!=="undefined"){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false});}});</script>
+</body></html>
